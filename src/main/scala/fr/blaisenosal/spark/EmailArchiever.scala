@@ -32,12 +32,7 @@ object EmailArchiever {
     testModel(model, hashing)
   }
 
-  def readSpam(folder: String): RDD[LabeledPoint] = {
-    /* TODO Lire tous les fichiers ce dossier (+ récursivité si nécessaire)
-     * Pour chaque fichier, créer un RDD[String] du mail correspondant et créer le LabeledPoint
-     */
-    null
-  }
+
 
   def testModel(model: LogisticRegressionModel, hashing: HashingTF): Unit = {
     //tests
