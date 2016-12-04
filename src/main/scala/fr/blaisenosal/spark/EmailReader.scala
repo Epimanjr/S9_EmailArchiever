@@ -1,11 +1,13 @@
 package fr.blaisenosal.spark
 
-import java.io.File
+import java.io.{BufferedWriter, File}
 
 import org.apache.spark.SparkContext
+import org.apache.spark.mllib.classification.LogisticRegressionModel
 import org.apache.spark.mllib.feature.HashingTF
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
+import org.apache.spark.mllib.linalg.Vector
 
 /**
   * Created by Maxime BLAISE on 04/12/2016.
@@ -65,5 +67,46 @@ object EmailReader {
     // Conversion en LabeledPoint
     val lPoint = new LabeledPoint(isSpam, hashing.transform(emailFlatMap.collect()))
     lPoint
+  }
+
+  /**
+    * Permet de lire tous les mails à prédire.
+    *
+    * @param path    Chemin du fichier contenant l'email
+    * @param sc      SparkContext
+    * @param hashing Hashing Transform
+    * @return RDD de Vector
+    */
+  def readEmailsToPredict(path: String, model: LogisticRegressionModel, sc: SparkContext, hashing: HashingTF, writer: BufferedWriter): Unit = {
+    val folder = new File(path)
+
+    // Lecture du contenu du dossier
+    for (file <- folder.listFiles()) {
+      if (file.isDirectory) {
+        // TODO Récursivité
+      } else if (!file.getName.equals("results.txt")){
+        // Lecture de l'email
+        val vector = readEmailToPredict(file.getAbsolutePath, sc, hashing)
+
+        val prediction = model.predict(vector)
+        writer.append(s"Prediction for ${file.getName} -> ${prediction}\n")
+      }
+    }
+
+  }
+
+  /**
+    * Permet de convertir le contenu d'un fichier entré en paramère en Vector
+    * @param path    Chemin du fichier contenant l'email
+    * @param sc      SparkContext
+    * @param hashing Hashing Transform
+    * @return Vector instance
+    */
+  def readEmailToPredict(path: String, sc: SparkContext, hashing: HashingTF): Vector = {
+    val dataFile = sc.textFile(path)
+            .flatMap(line => line.split("\\s+"))
+
+    val tf = hashing.transform(dataFile.collect())
+    tf
   }
 }

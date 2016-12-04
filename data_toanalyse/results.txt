@@ -1,0 +1,2 @@
+Prediction for email1.txt -> 1.0
+Prediction for email2.txt -> 0.0
