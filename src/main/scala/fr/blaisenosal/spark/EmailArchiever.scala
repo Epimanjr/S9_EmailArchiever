@@ -20,13 +20,10 @@ object EmailArchiever {
     val hashing = new HashingTF()
 
     // Données d'entrainement
-    val spam = sc.textFile("emails/spams/spam.txt").flatMap(mail => mail.split("\\s+"))
-    val ham = sc.textFile("emails/spams/ham.txt").flatMap(mail => mail.split("\\s+"))
+    val spams = EmailReader.readEmails("emails/spams", sc, hashing, 1)
+    val hams = EmailReader.readEmails("emails/hams", sc, hashing, 0)
 
-    val isSpam = new LabeledPoint(1, hashing.transform(spam.collect()))
-    val isHam = new LabeledPoint(0, hashing.transform(ham.collect()))
-
-    val trainingData = sc.parallelize(List(isSpam, isHam))
+    val trainingData = spams.union(hams)
     val model = LogisticRegressionWithSGD.train(trainingData, 200)
 
     testModel(model, hashing)

@@ -10,7 +10,7 @@ import org.apache.spark.rdd.RDD
 /**
   * Created by Maxime BLAISE on 04/12/2016.
   */
-class EmailReader {
+object EmailReader {
 
   /**
     * Lecture d'un dossier d'emails pour le convertir en RDD de LabeledPoint
