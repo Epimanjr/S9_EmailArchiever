@@ -34,9 +34,9 @@ object EmailArchiever {
   def testModel(model: LogisticRegressionModel, hashing: HashingTF): Unit = {
     //tests
     val spamMail = hashing.transform(
-      "insurance plan which change your life ...".split(" "))
+      "buy a SAMSUNG now for free !!".split(" "))
     val nonSpam = hashing.transform(
-      "hi sorry yaar i forget tell you i cant come today".split(" "))
+      "Hello I am your friend.".split(" "))
 
     println("Prediction for positive test example: " + model.predict(spamMail))
     println("Prediction for negative test example: " + model.predict(nonSpam))
