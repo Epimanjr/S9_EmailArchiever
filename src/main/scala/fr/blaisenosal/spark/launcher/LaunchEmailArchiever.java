@@ -8,6 +8,9 @@ import fr.blaisenosal.spark.EmailArchiever;
 public class LaunchEmailArchiever {
 
     public static void main (String[] args) {
+        if(args.length == 1)
+            System.setProperty("user.dir", args[0]);
+
         EmailArchiever.main(args);
     }
 

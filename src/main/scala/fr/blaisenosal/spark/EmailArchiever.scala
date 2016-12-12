@@ -17,8 +17,7 @@ object EmailArchiever {
 
   // Création du Spark Context
   val conf = new SparkConf()
-    .setMaster("local")
-    .setAppName("WordCount")
+    .setAppName("EmailArchiever")
   val sc = new SparkContext(conf)
 
   def main(args: Array[String]): Unit = {

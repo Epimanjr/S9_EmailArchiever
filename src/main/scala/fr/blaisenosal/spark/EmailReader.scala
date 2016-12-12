@@ -28,22 +28,30 @@ object EmailReader {
      * Pour chaque fichier, créer un RDD[String] du mail correspondant et créer le LabeledPoint
      */
 
-    val folder = new File(path)
+    val folder = new File(path+"/")
+    System.err.println("Folder : " + folder.getAbsolutePath());
     var listLPoint: List[LabeledPoint] = List()
 
     // Lecture du contenu du dossier
-    for (file <- folder.listFiles()) {
-      if (file.isDirectory) {
-        // TODO Récursivité
-      } else {
-        // Lecture de l'email
-        val lPoint = readEmail(file.getAbsolutePath, sc, hashing, isSpam)
+    if(folder == null) {
+      System.err.println("Folder is NULL !! ");
+    } else if(folder.isDirectory()) {
+      for (file <- folder.listFiles()) {
+        if (file.isDirectory) {
+          // TODO Récursivité
+        } else {
+          // Lecture de l'email
+          val lPoint = readEmail(file.getAbsolutePath, sc, hashing, isSpam)
 
 
-        // Ajout à la liste
-        listLPoint = List.concat(listLPoint, List(lPoint))
+          // Ajout à la liste
+          listLPoint = List.concat(listLPoint, List(lPoint))
+        }
       }
+    } else {
+      System.err.println("The specified file is NOT a folder ! ");
     }
+    
 
     // Création RDD à partir de la liste
     val rddLPoint = sc.parallelize(listLPoint)
